@@ -112,7 +112,8 @@ func (w *WorkerManager) Deactivate() {
 
 // Activate activates workers
 func (w *WorkerManager) Activate(nWorkers int) {
-	w.workersCount = nWorkers
+	// TODO move this in select
+	// w.workersCount = nWorkers
 	// this changing will be read in Process()
 	w.isActiveChan <- true
 }
