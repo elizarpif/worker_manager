@@ -5,12 +5,22 @@ import (
 	"time"
 
 	"github.com/elizarpif/worker-manager/manager"
+	"github.com/elizarpif/worker-manager/service"
 )
 
 func main() {
-	workersManager := manager.NewWorkerManager(10, true)
-	go workersManager.Process(context.Background())
-	defer workersManager.Close()
+	ctx := context.Background()
+	someService := &service.Service{}
 
-	time.Sleep(time.Second * 3)
+	workersManager := manager.NewWorkerManager(someService, 4, true)
+	go workersManager.Process(ctx)
+	defer workersManager.Close(ctx)
+
+	time.Sleep(time.Second * 5)
+
+	workersManager.Deactivate()
+	workersManager.SetNewWorkerCount(1)
+	workersManager.Activate()
+
+	time.Sleep(time.Second * 10)
 }

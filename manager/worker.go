@@ -4,10 +4,13 @@ import (
 	"context"
 
 	"github.com/elizarpif/logger"
+	"github.com/elizarpif/worker-manager/service"
 )
 
 // Worker for resorting
 type Worker struct {
+	service *service.Service
+
 	number int
 }
 
@@ -23,7 +26,11 @@ func (w *Worker) Run(ctx context.Context, isDone chan bool) {
 			return
 		default:
 			log.Infof("worker %d do smth", w.number)
-			// do some code
+
+			err := w.service.Process(ctx)
+			if err != nil {
+				log.Error(err)
+			}
 		}
 	}
 }
